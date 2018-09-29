@@ -1,6 +1,4 @@
-using System;
-
-namespace Notes.Web.Models
+﻿namespace Notes.Web.Models
 {
     public class ErrorViewModel
     {

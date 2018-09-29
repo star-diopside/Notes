@@ -2,6 +2,9 @@
     ViewData["Title"] = "Home";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="pb-2 mb-4 border-bottom">@ViewData["Title"]</h2>
 
-<a asp-controller="Notes" asp-action="Index">Notes</a>
+<div class="list-group">
+    <a class="list-group-item list-group-item-action" asp-controller="UploadFiles" asp-action="Create">ファイル登録</a>
+    <a class="list-group-item list-group-item-action" asp-controller="UploadFiles" asp-action="Index">アップロードファイル一覧</a>
+</div>
