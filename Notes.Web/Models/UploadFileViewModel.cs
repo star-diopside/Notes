@@ -12,8 +12,38 @@ namespace Notes.Web.Models
 
         public UploadFile ToUploadFile() => new UploadFile()
         {
-            FileName = string.IsNullOrEmpty(FileName) ? Path.GetFileName(File.FileName) : Path.GetFileName(FileName),
-            ContentType = File.ContentType
+            FileName = GetFileName(),
+            ContentType = File.ContentType,
+            Length = File.Length,
+            Data = GetFileData()
         };
+
+        private string GetFileName()
+        {
+            if (string.IsNullOrEmpty(FileName))
+            {
+                return Path.GetFileName(File.FileName);
+            }
+            else
+            {
+                var name = Path.GetFileName(FileName);
+
+                if (string.IsNullOrEmpty(Path.GetExtension(name)))
+                {
+                    name = Path.GetFileNameWithoutExtension(name) + Path.GetExtension(File.FileName);
+                }
+
+                return name;
+            }
+        }
+
+        private byte[] GetFileData()
+        {
+            using (var stream = new MemoryStream())
+            {
+                File.CopyTo(stream);
+                return stream.ToArray();
+            }
+        }
     }
 }

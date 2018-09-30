@@ -1,29 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Notes.Data;
-using Notes.Data.Models;
+﻿using Notes.Data.Models;
+using Notes.Data.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Notes.Web.Services
 {
-    class UploadFileService : IUploadFileService
+    public class UploadFileService : IUploadFileService
     {
-        public readonly NotesDbContext _notesDbContext;
+        private readonly IUploadFileRepository _uploadFileRepository;
 
-        public UploadFileService(NotesDbContext notesDbContext)
+        public UploadFileService(IUploadFileRepository uploadFileRepository)
         {
-            _notesDbContext = notesDbContext;
+            _uploadFileRepository = uploadFileRepository;
         }
 
         public async Task<IEnumerable<UploadFile>> SelectAllAsync()
         {
-            return await _notesDbContext.UploadFiles.ToListAsync();
+            return await _uploadFileRepository.ListAllAsync();
         }
 
         public async Task CreateAsync(UploadFile uploadFile)
         {
-            _notesDbContext.UploadFiles.Add(uploadFile);
-            await _notesDbContext.SaveChangesAsync();
+            await _uploadFileRepository.AddAsync(uploadFile);
         }
     }
 }

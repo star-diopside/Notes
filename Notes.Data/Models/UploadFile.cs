@@ -14,6 +14,14 @@ namespace Notes.Data.Models
         public string FileName { get; set; }
 
         [Column("content_type")]
+        [Required]
         public string ContentType { get; set; }
+
+        [Column("length")]
+        [Required]
+        public long Length { get; set; }
+
+        [Column("data")]
+        public byte[] Data { get; set; }
     }
 }

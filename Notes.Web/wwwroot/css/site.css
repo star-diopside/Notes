@@ -1,7 +1,6 @@
 ﻿@charset "UTF-8";
 
-body,
-input {
+body, input {
     font-family: "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
 }
 
@@ -12,4 +11,8 @@ input {
 
 .mainbtn-area {
     padding-top: 15px;
+}
+
+td.vertical-middle {
+    vertical-align: middle;
 }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Notes.Data;
 using Notes.Web.Services;
+using Notes.Data.Repositories;
 
 namespace Notes.Web
 {
@@ -29,12 +30,12 @@ namespace Notes.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<NotesDbContext>(optionsBuilder => optionsBuilder.UseNpgsql(
                 Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Notes.Web")));
 
+            services.AddScoped<IUploadFileRepository, UploadFileRepository>();
             services.AddScoped<IUploadFileService, UploadFileService>();
         }
 
