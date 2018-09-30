@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notes.Data.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Notes.Data.Repositories
@@ -14,9 +15,15 @@ namespace Notes.Data.Repositories
             _notesDbContext = notesDbContext;
         }
 
-        public async Task<IEnumerable<UploadFile>> ListAllAsync()
+        public async Task<IEnumerable<UploadFile>> ListAllWithoutDataAsync()
         {
-            return await _notesDbContext.UploadFiles.ToListAsync();
+            return await _notesDbContext.UploadFiles.Select(u => new UploadFile
+            {
+                Id = u.Id,
+                FileName = u.FileName,
+                ContentType = u.ContentType,
+                Length = u.Length
+            }).ToListAsync();
         }
 
         public async Task AddAsync(UploadFile uploadFile)

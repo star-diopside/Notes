@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Notes.Web.Models;
 using Notes.Web.Services;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Notes.Web.Controllers
@@ -18,7 +19,8 @@ namespace Notes.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _uploadFileService.SelectAllAsync());
+            var uploadFiles = await _uploadFileService.SelectAllAsync();
+            return View(uploadFiles.Select(u => new UploadFileViewModel(u)));
         }
 
         public IActionResult Details(int id)

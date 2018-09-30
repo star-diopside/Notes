@@ -16,7 +16,7 @@ namespace Notes.Web.Services
 
         public async Task<IEnumerable<UploadFile>> SelectAllAsync()
         {
-            return await _uploadFileRepository.ListAllAsync();
+            return await _uploadFileRepository.ListAllWithoutDataAsync();
         }
 
         public async Task CreateAsync(UploadFile uploadFile)

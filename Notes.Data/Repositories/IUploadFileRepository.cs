@@ -6,7 +6,7 @@ namespace Notes.Data.Repositories
 {
     public interface IUploadFileRepository
     {
-        Task<IEnumerable<UploadFile>> ListAllAsync();
+        Task<IEnumerable<UploadFile>> ListAllWithoutDataAsync();
 
         Task AddAsync(UploadFile uploadFile);
     }
