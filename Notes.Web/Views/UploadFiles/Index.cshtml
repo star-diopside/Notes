@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<UploadFileViewModel>
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "アップロードファイル一覧";
+    ViewData["Title"] = Localizer["Index upload files"];
 }
 
 <h2 class="pb-2 mb-4 border-bottom">@ViewData["Title"]</h2>
@@ -13,7 +14,7 @@
             <th class="text-center">@Html.DisplayNameFor(model => model.FileName)</th>
             <th class="text-center">@Html.DisplayNameFor(model => model.ContentType)</th>
             <th class="text-center">@Html.DisplayNameFor(model => model.Length)</th>
-            <th class="text-center">アクション</th>
+            <th class="text-center">@Localizer["Action"]</th>
         </tr>
     </thead>
     <tbody>
@@ -25,9 +26,9 @@
                 <td class="vertical-middle text-center">@Html.DisplayFor(_ => item.ContentType)</td>
                 <td class="vertical-middle text-right">@Html.DisplayFor(_ => item.Length)</td>
                 <td class="vertical-middle text-center">
-                    <a class="btn btn-outline-primary btn-sm" asp-controller="UploadFiles" asp-action="Details" asp-route-id="@item.Id">詳細</a>
-                    <a class="btn btn-outline-primary btn-sm" asp-controller="UploadFiles" asp-action="Edit" asp-route-id="@item.Id">編集</a>
-                    <a class="btn btn-outline-primary btn-sm" asp-controller="UploadFiles" asp-action="Delete" asp-route-id="@item.Id">削除</a>
+                    <a class="btn btn-outline-primary btn-sm" asp-controller="UploadFiles" asp-action="Details" asp-route-id="@item.Id">@Localizer["Details"]</a>
+                    <a class="btn btn-outline-primary btn-sm" asp-controller="UploadFiles" asp-action="Edit" asp-route-id="@item.Id">@Localizer["Edit"]</a>
+                    <a class="btn btn-outline-primary btn-sm" asp-controller="UploadFiles" asp-action="Delete" asp-route-id="@item.Id">@Localizer["Delete"]</a>
                 </td>
             </tr>
         }

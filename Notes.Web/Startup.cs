@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Notes.Data;
-using Notes.Web.Services;
 using Notes.Data.Repositories;
+using Notes.Web.Services;
+using System.Globalization;
 
 namespace Notes.Web
 {
@@ -30,7 +32,11 @@ namespace Notes.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddDataAnnotationsLocalization()
+                .AddViewLocalization();
 
             services.AddDbContext<NotesDbContext>(optionsBuilder => optionsBuilder.UseNpgsql(
                 Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Notes.Web")));
@@ -42,6 +48,21 @@ namespace Notes.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            var supportedCultures = new[]
+            {
+                new CultureInfo("ja-JP"),
+                new CultureInfo("ja"),
+                new CultureInfo("en-US"),
+                new CultureInfo("en")
+            };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("ja-JP"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

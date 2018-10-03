@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "ファイル詳細";
+﻿@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Details upload file"];
 }
 
 <h2 class="pb-2 mb-4 border-bottom">@ViewData["Title"]</h2>

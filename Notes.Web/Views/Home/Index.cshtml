@@ -1,10 +1,12 @@
-﻿@{
-    ViewData["Title"] = "Home";
+﻿@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Home"];
 }
 
 <h2 class="pb-2 mb-4 border-bottom">@ViewData["Title"]</h2>
 
 <div class="list-group">
-    <a class="list-group-item list-group-item-action" asp-controller="UploadFiles" asp-action="Create">ファイル登録</a>
-    <a class="list-group-item list-group-item-action" asp-controller="UploadFiles" asp-action="Index">アップロードファイル一覧</a>
+    <a class="list-group-item list-group-item-action" asp-controller="UploadFiles" asp-action="Create">@Localizer["Create upload file"]</a>
+    <a class="list-group-item list-group-item-action" asp-controller="UploadFiles" asp-action="Index">@Localizer["Index upload files"]</a>
 </div>

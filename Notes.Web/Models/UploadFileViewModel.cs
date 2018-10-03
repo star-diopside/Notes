@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Notes.Data.Models;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
@@ -8,16 +7,16 @@ namespace Notes.Web.Models
 {
     public class UploadFileViewModel
     {
-        [DisplayName("ID")]
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
-        [DisplayName("ファイル名")]
+        [Display(Name = "File Name")]
         public string FileName { get; set; }
 
-        [DisplayName("コンテンツタイプ")]
+        [Display(Name = "Content Type")]
         public string ContentType { get; set; }
 
-        [DisplayName("ファイルサイズ")]
+        [Display(Name = "File Size")]
         [DisplayFormat(DataFormatString = "{0:#,#}")]
         public long Length { get; set; }
 
