@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Notes.Web.Models;
 using Notes.Web.Services;
+using System;
 using System.Threading.Tasks;
 
 namespace Notes.Web.Controllers
@@ -9,10 +11,12 @@ namespace Notes.Web.Controllers
     [AutoValidateAntiforgeryToken]
     public class UploadFilesController : Controller
     {
+        private readonly ILogger<UploadFilesController> _logger;
         private readonly IUploadFileService _uploadFileService;
 
-        public UploadFilesController(IUploadFileService uploadFileService)
+        public UploadFilesController(ILogger<UploadFilesController> logger, IUploadFileService uploadFileService)
         {
+            _logger = logger;
             _uploadFileService = uploadFileService;
         }
 
@@ -40,44 +44,50 @@ namespace Notes.Web.Controllers
                 await _uploadFileService.CreateAsync(uploadFile);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogWarning(e, e.Message);
                 return View();
             }
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            return View(await _uploadFileService.GetDetailsAsync(id));
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, IFormCollection collection)
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> Edit(int id, UploadFileViewModel uploadFile)
         {
             try
             {
+                await _uploadFileService.EditAsync(id, uploadFile);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogWarning(e, e.Message);
                 return View();
             }
         }
 
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            return View(await _uploadFileService.GetDetailsAsync(id));
         }
 
         [HttpPost]
-        public IActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
+                await _uploadFileService.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogWarning(e, e.Message);
                 return View();
             }
         }
@@ -85,7 +95,7 @@ namespace Notes.Web.Controllers
         public async Task<IActionResult> Download(int id)
         {
             var uploadFile = await _uploadFileService.GetDownloadDataAsync(id);
-            return File(uploadFile.Data, uploadFile.ContentType, uploadFile.FileName);
+            return File(uploadFile.UploadFileData.Data, uploadFile.ContentType, uploadFile.FileName);
         }
     }
 }

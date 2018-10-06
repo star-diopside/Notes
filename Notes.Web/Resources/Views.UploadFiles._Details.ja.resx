@@ -117,10 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Details upload file" xml:space="preserve">
-    <value>ファイル詳細</value>
-  </data>
-  <data name="Download" xml:space="preserve">
-    <value>ダウンロード</value>
+  <data name="{0} bytes" xml:space="preserve">
+    <value>{0} バイト</value>
   </data>
 </root>

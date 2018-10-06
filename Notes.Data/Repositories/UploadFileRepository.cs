@@ -37,5 +37,17 @@ namespace Notes.Data.Repositories
             _notesDbContext.UploadFiles.Add(uploadFile);
             await _notesDbContext.SaveChangesAsync();
         }
+
+        public async Task UpdateAsync(UploadFile uploadFile)
+        {
+            _notesDbContext.UploadFiles.Update(uploadFile);
+            await _notesDbContext.SaveChangesAsync();
+        }
+
+        public async Task RemoveAsync(UploadFile uploadFile)
+        {
+            _notesDbContext.UploadFiles.Remove(uploadFile);
+            await _notesDbContext.SaveChangesAsync();
+        }
     }
 }

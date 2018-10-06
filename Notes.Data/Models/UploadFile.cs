@@ -21,7 +21,6 @@ namespace Notes.Data.Models
         [Required]
         public long Length { get; set; }
 
-        [Column("data")]
-        public byte[] Data { get; set; }
+        public virtual UploadFileData UploadFileData { get; set; }
     }
 }

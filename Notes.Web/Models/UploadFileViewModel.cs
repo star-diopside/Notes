@@ -23,19 +23,44 @@ namespace Notes.Web.Models
         [Display(Name = "File")]
         public IFormFile File { get; set; }
 
-        public UploadFile ToUploadFile() => new UploadFile
+        public UploadFileViewModel()
         {
-            FileName = GetFileName(),
-            ContentType = File.ContentType,
-            Length = File.Length,
-            Data = GetFileData()
-        };
+        }
+
+        public UploadFileViewModel(UploadFile uploadFile)
+        {
+            Id = uploadFile.Id;
+            FileName = uploadFile.FileName;
+            ContentType = uploadFile.ContentType;
+            Length = uploadFile.Length;
+        }
+
+        public UploadFile ToUploadFile() => UpdateUploadFile(new UploadFile());
+
+        public UploadFile UpdateUploadFile(UploadFile uploadFile)
+        {
+            uploadFile.FileName = GetFileName();
+
+            if (File != null)
+            {
+                if (uploadFile.UploadFileData == null)
+                {
+                    uploadFile.UploadFileData = new UploadFileData();
+                }
+
+                uploadFile.ContentType = File.ContentType;
+                uploadFile.Length = File.Length;
+                uploadFile.UploadFileData.Data = GetFileData();
+            }
+
+            return uploadFile;
+        }
 
         private string GetFileName()
         {
             if (string.IsNullOrEmpty(FileName))
             {
-                return Path.GetFileName(File.FileName);
+                return File == null ? null : Path.GetFileName(File.FileName);
             }
             else
             {

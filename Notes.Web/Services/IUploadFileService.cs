@@ -14,5 +14,9 @@ namespace Notes.Web.Services
         Task<UploadFile> GetDownloadDataAsync(int id);
 
         Task CreateAsync(UploadFileViewModel uploadFile);
+
+        Task EditAsync(int id, UploadFileViewModel uploadFile);
+
+        Task DeleteAsync(int id);
     }
 }

@@ -117,7 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
   <data name="Delete upload file" xml:space="preserve">
     <value>ファイル削除</value>
+  </data>
+  <data name="The following data is deleted. Please check and click the {0} button." xml:space="preserve">
+    <value>以下のデータが削除されます。確認の上、{0}ボタンをクリックしてください。</value>
   </data>
 </root>
