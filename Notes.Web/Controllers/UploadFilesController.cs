@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Notes.Web.Models;
 using Notes.Web.Services;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Notes.Web.Controllers
@@ -19,13 +18,12 @@ namespace Notes.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var uploadFiles = await _uploadFileService.SelectAllAsync();
-            return View(uploadFiles.Select(u => new UploadFileViewModel(u)));
+            return View(await _uploadFileService.ListAsync());
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            return View(await _uploadFileService.GetDetailsAsync(id));
         }
 
         public IActionResult Create()
@@ -38,7 +36,7 @@ namespace Notes.Web.Controllers
         {
             try
             {
-                await _uploadFileService.CreateAsync(uploadFile.ToUploadFile());
+                await _uploadFileService.CreateAsync(uploadFile);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -81,6 +79,12 @@ namespace Notes.Web.Controllers
             {
                 return View();
             }
+        }
+
+        public async Task<IActionResult> Download(int id)
+        {
+            var uploadFile = await _uploadFileService.GetDownloadDataAsync(id);
+            return File(uploadFile.Data, uploadFile.ContentType, uploadFile.FileName);
         }
     }
 }

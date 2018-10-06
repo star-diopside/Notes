@@ -120,6 +120,9 @@
   <data name="Content Type" xml:space="preserve">
     <value>コンテンツタイプ</value>
   </data>
+  <data name="File" xml:space="preserve">
+    <value>ファイル</value>
+  </data>
   <data name="File Name" xml:space="preserve">
     <value>ファイル名</value>
   </data>

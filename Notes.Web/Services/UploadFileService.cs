@@ -1,5 +1,6 @@
 ﻿using Notes.Data.Models;
 using Notes.Data.Repositories;
+using Notes.Web.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,14 +15,36 @@ namespace Notes.Web.Services
             _uploadFileRepository = uploadFileRepository;
         }
 
-        public async Task<IEnumerable<UploadFile>> SelectAllAsync()
+        public async Task<IEnumerable<UploadFileViewModel>> ListAsync()
         {
-            return await _uploadFileRepository.ListAllWithoutDataAsync();
+            return await _uploadFileRepository.FindAllAsync(u => new UploadFileViewModel
+            {
+                Id = u.Id,
+                FileName = u.FileName,
+                ContentType = u.ContentType,
+                Length = u.Length
+            });
         }
 
-        public async Task CreateAsync(UploadFile uploadFile)
+        public async Task<UploadFileViewModel> GetDetailsAsync(int id)
         {
-            await _uploadFileRepository.AddAsync(uploadFile);
+            return await _uploadFileRepository.FindByIdAsync(id, u => new UploadFileViewModel
+            {
+                Id = u.Id,
+                FileName = u.FileName,
+                ContentType = u.ContentType,
+                Length = u.Length
+            });
+        }
+
+        public async Task<UploadFile> GetDownloadDataAsync(int id)
+        {
+            return await _uploadFileRepository.FindByIdAsync(id);
+        }
+
+        public async Task CreateAsync(UploadFileViewModel uploadFile)
+        {
+            await _uploadFileRepository.AddAsync(uploadFile.ToUploadFile());
         }
     }
 }

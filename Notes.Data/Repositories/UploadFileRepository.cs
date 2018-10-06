@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notes.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Notes.Data.Repositories
@@ -15,15 +17,19 @@ namespace Notes.Data.Repositories
             _notesDbContext = notesDbContext;
         }
 
-        public async Task<IEnumerable<UploadFile>> ListAllWithoutDataAsync()
+        public async Task<IEnumerable<TResult>> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector)
         {
-            return await _notesDbContext.UploadFiles.Select(u => new UploadFile
-            {
-                Id = u.Id,
-                FileName = u.FileName,
-                ContentType = u.ContentType,
-                Length = u.Length
-            }).ToListAsync();
+            return await _notesDbContext.UploadFiles.Select(selector).ToListAsync();
+        }
+
+        public async Task<UploadFile> FindByIdAsync(int id)
+        {
+            return await _notesDbContext.UploadFiles.SingleAsync(u => u.Id == id);
+        }
+
+        public async Task<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector)
+        {
+            return await _notesDbContext.UploadFiles.Where(u => u.Id == id).Select(selector).SingleAsync();
         }
 
         public async Task AddAsync(UploadFile uploadFile)

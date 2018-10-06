@@ -20,21 +20,10 @@ namespace Notes.Web.Models
         [DisplayFormat(DataFormatString = "{0:#,#}")]
         public long Length { get; set; }
 
+        [Display(Name = "File")]
         public IFormFile File { get; set; }
 
-        public UploadFileViewModel()
-        {
-        }
-
-        public UploadFileViewModel(UploadFile uploadFile)
-        {
-            Id = uploadFile.Id;
-            FileName = uploadFile.FileName;
-            ContentType = uploadFile.ContentType;
-            Length = uploadFile.Length;
-        }
-
-        public UploadFile ToUploadFile() => new UploadFile()
+        public UploadFile ToUploadFile() => new UploadFile
         {
             FileName = GetFileName(),
             ContentType = File.ContentType,

@@ -1,5 +1,5 @@
-﻿@model IEnumerable<UploadFileViewModel>
-@inject IViewLocalizer Localizer
+﻿@inject IViewLocalizer Localizer
+@model IEnumerable<UploadFileViewModel>
 
 @{
     ViewData["Title"] = Localizer["Index upload files"];
@@ -22,7 +22,7 @@
         {
             <tr>
                 <td class="vertical-middle text-center">@Html.DisplayFor(_ => item.Id)</td>
-                <td class="vertical-middle">@Html.DisplayFor(_ => item.FileName)</td>
+                <td class="vertical-middle"><a asp-controller="UploadFiles" asp-action="Download" asp-route-id="@item.Id">@Html.DisplayFor(_ => item.FileName)</a></td>
                 <td class="vertical-middle text-center">@Html.DisplayFor(_ => item.ContentType)</td>
                 <td class="vertical-middle text-right">@Html.DisplayFor(_ => item.Length)</td>
                 <td class="vertical-middle text-center">

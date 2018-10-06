@@ -1,4 +1,5 @@
 ﻿using Notes.Data.Models;
+using Notes.Web.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,8 +7,12 @@ namespace Notes.Web.Services
 {
     public interface IUploadFileService
     {
-        Task<IEnumerable<UploadFile>> SelectAllAsync();
+        Task<IEnumerable<UploadFileViewModel>> ListAsync();
 
-        Task CreateAsync(UploadFile uploadFile);
+        Task<UploadFileViewModel> GetDetailsAsync(int id);
+
+        Task<UploadFile> GetDownloadDataAsync(int id);
+
+        Task CreateAsync(UploadFileViewModel uploadFile);
     }
 }
