@@ -19,7 +19,7 @@ namespace Notes.Data.Repositories
 
         public async Task<IEnumerable<TResult>> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector)
         {
-            return await _notesDbContext.UploadFiles.Select(selector).ToListAsync();
+            return await _notesDbContext.UploadFiles.OrderBy(u => u.Id).Select(selector).ToListAsync();
         }
 
         public async Task<UploadFile> FindByIdAsync(int id)
