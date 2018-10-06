@@ -32,6 +32,7 @@ namespace Notes.Web.Controllers
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
         public async Task<IActionResult> Create(UploadFileViewModel uploadFile)
         {
             try
