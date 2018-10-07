@@ -22,14 +22,14 @@ namespace Notes.Data.Repositories
             return await _notesDbContext.UploadFiles.OrderBy(u => u.Id).Select(selector).ToListAsync();
         }
 
-        public async Task<UploadFile> FindByIdAsync(int id)
+        public Task<UploadFile> FindByIdAsync(int id)
         {
-            return await _notesDbContext.UploadFiles.SingleAsync(u => u.Id == id);
+            return _notesDbContext.UploadFiles.FindAsync(id);
         }
 
-        public async Task<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector)
+        public Task<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector)
         {
-            return await _notesDbContext.UploadFiles.Where(u => u.Id == id).Select(selector).SingleAsync();
+            return _notesDbContext.UploadFiles.Where(u => u.Id == id).Select(selector).SingleOrDefaultAsync();
         }
 
         public async Task AddAsync(UploadFile uploadFile)

@@ -31,7 +31,14 @@ namespace Notes.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            return View(await _uploadFileService.GetDetailsAsync(id));
+            var uploadFile = await _uploadFileService.GetDetailsAsync(id);
+
+            if (uploadFile == null)
+            {
+                return NotFound();
+            }
+
+            return View(uploadFile);
         }
 
         public IActionResult Create()
@@ -56,10 +63,8 @@ namespace Notes.Web.Controllers
             }
         }
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            return View(await _uploadFileService.GetDetailsAsync(id));
-        }
+        public Task<IActionResult> Edit(int id) => Details(id);
+
 
         [HttpPost]
         [DisableRequestSizeLimit]
@@ -79,10 +84,7 @@ namespace Notes.Web.Controllers
             }
         }
 
-        public async Task<IActionResult> Delete(int id)
-        {
-            return View(await _uploadFileService.GetDetailsAsync(id));
-        }
+        public Task<IActionResult> Delete(int id) => Details(id);
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id, uint version)
@@ -104,6 +106,12 @@ namespace Notes.Web.Controllers
         public async Task<IActionResult> Download(int id)
         {
             var uploadFile = await _uploadFileService.GetDownloadDataAsync(id);
+
+            if (uploadFile == null)
+            {
+                return NotFound();
+            }
+
             return File(uploadFile.UploadFileData.Data, uploadFile.ContentType, uploadFile.FileName);
         }
     }

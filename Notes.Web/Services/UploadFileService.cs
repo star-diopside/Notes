@@ -16,30 +16,30 @@ namespace Notes.Web.Services
             _uploadFileRepository = uploadFileRepository;
         }
 
-        public async Task<IEnumerable<UploadFileViewModel>> ListAsync()
+        public Task<IEnumerable<UploadFileViewModel>> ListAsync()
         {
-            return await _uploadFileRepository.FindAllAsync(u => new UploadFileViewModel(u)
+            return _uploadFileRepository.FindAllAsync(u => new UploadFileViewModel(u)
             {
                 Version = EF.Property<uint>(u, "xmin")
             });
         }
 
-        public async Task<UploadFileViewModel> GetDetailsAsync(int id)
+        public Task<UploadFileViewModel> GetDetailsAsync(int id)
         {
-            return await _uploadFileRepository.FindByIdAsync(id, u => new UploadFileViewModel(u)
+            return _uploadFileRepository.FindByIdAsync(id, u => new UploadFileViewModel(u)
             {
                 Version = EF.Property<uint>(u, "xmin")
             });
         }
 
-        public async Task<UploadFile> GetDownloadDataAsync(int id)
+        public Task<UploadFile> GetDownloadDataAsync(int id)
         {
-            return await _uploadFileRepository.FindByIdAsync(id);
+            return _uploadFileRepository.FindByIdAsync(id);
         }
 
-        public async Task CreateAsync(UploadFileViewModel uploadFile)
+        public Task CreateAsync(UploadFileViewModel uploadFile)
         {
-            await _uploadFileRepository.AddAsync(uploadFile.ToUploadFile());
+            return _uploadFileRepository.AddAsync(uploadFile.ToUploadFile());
         }
 
         public async Task EditAsync(int id, UploadFileViewModel uploadFile)
@@ -48,10 +48,9 @@ namespace Notes.Web.Services
             await _uploadFileRepository.UpdateAsync(uploadFile.UpdateUploadFile(model), uploadFile.Version);
         }
 
-        public async Task DeleteAsync(int id, uint version)
+        public Task DeleteAsync(int id, uint version)
         {
-            var uploadFile = new UploadFile { Id = id };
-            await _uploadFileRepository.RemoveAsync(uploadFile, version);
+            return _uploadFileRepository.RemoveAsync(new UploadFile { Id = id }, version);
         }
     }
 }
