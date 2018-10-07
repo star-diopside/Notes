@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Notes.Web.Models;
 using Notes.Web.Services;
@@ -12,11 +13,14 @@ namespace Notes.Web.Controllers
     public class UploadFilesController : Controller
     {
         private readonly ILogger<UploadFilesController> _logger;
+        private readonly IStringLocalizer<UploadFilesController> _localizer;
         private readonly IUploadFileService _uploadFileService;
 
-        public UploadFilesController(ILogger<UploadFilesController> logger, IUploadFileService uploadFileService)
+        public UploadFilesController(ILogger<UploadFilesController> logger, IStringLocalizer<UploadFilesController> localizer,
+            IUploadFileService uploadFileService)
         {
             _logger = logger;
+            _localizer = localizer;
             _uploadFileService = uploadFileService;
         }
 
@@ -42,12 +46,13 @@ namespace Notes.Web.Controllers
             try
             {
                 await _uploadFileService.CreateAsync(uploadFile);
+                TempData["Success"] = _localizer["File was successfully uploaded."].Value;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {
                 _logger.LogWarning(e, e.Message);
-                return View();
+                return View(uploadFile);
             }
         }
 
@@ -63,12 +68,14 @@ namespace Notes.Web.Controllers
             try
             {
                 await _uploadFileService.EditAsync(id, uploadFile);
+                TempData["Success"] = _localizer["File was successfully updated."].Value;
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
+            catch (DbUpdateConcurrencyException e)
             {
                 _logger.LogWarning(e, e.Message);
-                return View();
+                ViewData["Warning"] = _localizer["This data was updated by another user."];
+                return View(uploadFile);
             }
         }
 
@@ -78,17 +85,19 @@ namespace Notes.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int id, uint version)
         {
             try
             {
-                await _uploadFileService.DeleteAsync(id);
+                await _uploadFileService.DeleteAsync(id, version);
+                TempData["Success"] = _localizer["File was successfully deleted."].Value;
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
+            catch (DbUpdateConcurrencyException e)
             {
                 _logger.LogWarning(e, e.Message);
-                return View();
+                ViewData["Warning"] = _localizer["This data was updated by another user."];
+                return View(await _uploadFileService.GetDetailsAsync(id));
             }
         }
 

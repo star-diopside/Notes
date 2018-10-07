@@ -15,5 +15,11 @@ namespace Notes.Data
         {
             optionsBuilder.UseLazyLoadingProxies();
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UploadFile>().ForNpgsqlUseXminAsConcurrencyToken();
+            modelBuilder.Entity<UploadFileData>().ForNpgsqlUseXminAsConcurrencyToken();
+        }
     }
 }

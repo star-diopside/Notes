@@ -17,6 +17,6 @@ namespace Notes.Web.Services
 
         Task EditAsync(int id, UploadFileViewModel uploadFile);
 
-        Task DeleteAsync(int id);
+        Task DeleteAsync(int id, uint version);
     }
 }

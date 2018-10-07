@@ -1,4 +1,5 @@
-﻿using Notes.Data.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Notes.Data.Models;
 using Notes.Data.Repositories;
 using Notes.Web.Models;
 using System.Collections.Generic;
@@ -17,12 +18,18 @@ namespace Notes.Web.Services
 
         public async Task<IEnumerable<UploadFileViewModel>> ListAsync()
         {
-            return await _uploadFileRepository.FindAllAsync(u => new UploadFileViewModel(u));
+            return await _uploadFileRepository.FindAllAsync(u => new UploadFileViewModel(u)
+            {
+                Version = EF.Property<uint>(u, "xmin")
+            });
         }
 
         public async Task<UploadFileViewModel> GetDetailsAsync(int id)
         {
-            return await _uploadFileRepository.FindByIdAsync(id, u => new UploadFileViewModel(u));
+            return await _uploadFileRepository.FindByIdAsync(id, u => new UploadFileViewModel(u)
+            {
+                Version = EF.Property<uint>(u, "xmin")
+            });
         }
 
         public async Task<UploadFile> GetDownloadDataAsync(int id)
@@ -38,13 +45,13 @@ namespace Notes.Web.Services
         public async Task EditAsync(int id, UploadFileViewModel uploadFile)
         {
             var model = await _uploadFileRepository.FindByIdAsync(id);
-            await _uploadFileRepository.UpdateAsync(uploadFile.UpdateUploadFile(model));
+            await _uploadFileRepository.UpdateAsync(uploadFile.UpdateUploadFile(model), uploadFile.Version);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, uint version)
         {
             var uploadFile = new UploadFile { Id = id };
-            await _uploadFileRepository.RemoveAsync(uploadFile);
+            await _uploadFileRepository.RemoveAsync(uploadFile, version);
         }
     }
 }

@@ -23,6 +23,8 @@ namespace Notes.Web.Models
         [Display(Name = "File")]
         public IFormFile File { get; set; }
 
+        public uint Version { get; set; }
+
         public UploadFileViewModel()
         {
         }

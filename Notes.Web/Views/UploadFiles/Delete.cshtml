@@ -7,11 +7,17 @@
 
 <h2 class="pb-2 mb-4 border-bottom">@ViewData["Title"]</h2>
 
+@if (ViewData["Warning"] != null)
+{
+    <div class="alert alert-warning" role="alert">@ViewData["Warning"]</div>
+}
+
 <div class="alert alert-danger" role="alert">@Localizer["The following data is deleted. Please check and click the {0} button.", Localizer["Delete"]]</div>
 
 <partial name="_Details" />
 
 <form method="post" role="form" asp-controller="UploadFiles" asp-action="Delete" asp-route-id="@Model.Id">
+    <input type="hidden" name="version" asp-for="Version" />
     <div class="form-group row mainbtn-area">
         <div class="col-sm-12">
             <div class="float-right">

@@ -16,8 +16,8 @@ namespace Notes.Data.Repositories
 
         Task AddAsync(UploadFile uploadFile);
 
-        Task UpdateAsync(UploadFile uploadFile);
+        Task UpdateAsync(UploadFile uploadFile, uint version);
 
-        Task RemoveAsync(UploadFile uploadFile);
+        Task RemoveAsync(UploadFile uploadFile, uint version);
     }
 }

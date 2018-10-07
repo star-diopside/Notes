@@ -7,8 +7,14 @@
 
 <h2 class="pb-2 mb-4 border-bottom">@ViewData["Title"]</h2>
 
+@if (ViewData["Warning"] != null)
+{
+    <div class="alert alert-warning" role="alert">@ViewData["Warning"]</div>
+}
+
 <form method="post" enctype="multipart/form-data" role="form" asp-controller="UploadFiles" asp-action="Edit" asp-route-id="@Model.Id">
     <partial name="_Form" />
+    <input type="hidden" asp-for="Version" />
     <div class="form-group row mainbtn-area">
         <div class="col-sm-12">
             <div class="float-right">
