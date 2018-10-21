@@ -41,7 +41,10 @@ namespace Notes.Web
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddDataAnnotationsLocalization()
+                .AddDataAnnotationsLocalization(options =>
+                {
+                    options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(Startup));
+                })
                 .AddViewLocalization();
 
             services.AddDbContext<NotesDbContext>(optionsBuilder => optionsBuilder.UseNpgsql(
