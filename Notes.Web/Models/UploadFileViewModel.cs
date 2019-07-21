@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Notes.Data.Models;
+using Notes.Web.Validators;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
@@ -11,6 +12,7 @@ namespace Notes.Web.Models
         public int Id { get; set; }
 
         [Display(Name = "File Name")]
+        [FileNameValidation(ErrorMessage = "The {0} field is using illegal characters.")]
         public string FileName { get; set; }
 
         [Display(Name = "Content Type")]
@@ -21,7 +23,7 @@ namespace Notes.Web.Models
         public long Length { get; set; }
 
         [Display(Name = "File")]
-        public IFormFile File { get; set; }
+        public virtual IFormFile File { get; set; }
 
         public uint Version { get; set; }
 

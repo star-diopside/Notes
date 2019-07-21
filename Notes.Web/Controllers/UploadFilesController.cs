@@ -4,7 +4,6 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Notes.Web.Models;
 using Notes.Web.Services;
-using System;
 using System.Threading.Tasks;
 
 namespace Notes.Web.Controllers
@@ -48,19 +47,15 @@ namespace Notes.Web.Controllers
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> Create(UploadFileViewModel uploadFile)
+        public async Task<IActionResult> Create(RequiredUploadFileViewModel uploadFile)
         {
-            try
+            if (ModelState.IsValid)
             {
                 await _uploadFileService.CreateAsync(uploadFile);
                 TempData["Success"] = _localizer["File was successfully uploaded."].Value;
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
-            {
-                _logger.LogWarning(e, e.Message);
-                return View(uploadFile);
-            }
+            return View(uploadFile);
         }
 
         public Task<IActionResult> Edit(int id) => Details(id);
@@ -70,18 +65,22 @@ namespace Notes.Web.Controllers
         [DisableRequestSizeLimit]
         public async Task<IActionResult> Edit(int id, UploadFileViewModel uploadFile)
         {
-            try
+            if (ModelState.IsValid)
             {
-                await _uploadFileService.EditAsync(id, uploadFile);
-                TempData["Success"] = _localizer["File was successfully updated."].Value;
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _uploadFileService.EditAsync(id, uploadFile);
+                    TempData["Success"] = _localizer["File was successfully updated."].Value;
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException e)
+                {
+                    _logger.LogWarning(e, e.Message);
+                    ViewData["Warning"] = _localizer["This data was updated by another user."];
+                    return View(uploadFile);
+                }
             }
-            catch (DbUpdateConcurrencyException e)
-            {
-                _logger.LogWarning(e, e.Message);
-                ViewData["Warning"] = _localizer["This data was updated by another user."];
-                return View(uploadFile);
-            }
+            return View(uploadFile);
         }
 
         public Task<IActionResult> Delete(int id) => Details(id);
