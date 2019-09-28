@@ -18,8 +18,8 @@ namespace Notes.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UploadFile>().ForNpgsqlUseXminAsConcurrencyToken();
-            modelBuilder.Entity<UploadFileData>().ForNpgsqlUseXminAsConcurrencyToken();
+            modelBuilder.Entity<UploadFile>().UseXminAsConcurrencyToken();
+            modelBuilder.Entity<UploadFileData>().UseXminAsConcurrencyToken();
         }
     }
 }
