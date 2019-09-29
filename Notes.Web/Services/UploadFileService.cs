@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Notes.Data.Models;
+﻿using Notes.Data.Models;
 using Notes.Data.Repositories;
 using Notes.Web.Models;
 using System.Collections.Generic;
@@ -18,18 +17,12 @@ namespace Notes.Web.Services
 
         public Task<IEnumerable<UploadFileViewModel>> ListAsync()
         {
-            return _uploadFileRepository.FindAllAsync(u => new UploadFileViewModel(u)
-            {
-                Version = EF.Property<uint>(u, "xmin")
-            });
+            return _uploadFileRepository.FindAllAsync(u => new UploadFileViewModel(u));
         }
 
         public Task<UploadFileViewModel> GetDetailsAsync(int id)
         {
-            return _uploadFileRepository.FindByIdAsync(id, u => new UploadFileViewModel(u)
-            {
-                Version = EF.Property<uint>(u, "xmin")
-            });
+            return _uploadFileRepository.FindByIdAsync(id, u => new UploadFileViewModel(u));
         }
 
         public Task<UploadFile> GetDownloadDataAsync(int id)

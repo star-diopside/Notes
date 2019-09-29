@@ -44,14 +44,14 @@ namespace Notes.Data.Repositories
 
         public async Task UpdateAsync(UploadFile uploadFile, uint version)
         {
-            _notesDbContext.Entry(uploadFile).Property<uint>("xmin").OriginalValue = version;
+            _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = version;
             _notesDbContext.UploadFiles.Update(uploadFile);
             await _notesDbContext.SaveChangesAsync();
         }
 
         public async Task RemoveAsync(UploadFile uploadFile, uint version)
         {
-            _notesDbContext.Entry(uploadFile).Property<uint>("xmin").OriginalValue = version;
+            _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = version;
             _notesDbContext.UploadFiles.Remove(uploadFile);
             await _notesDbContext.SaveChangesAsync();
         }

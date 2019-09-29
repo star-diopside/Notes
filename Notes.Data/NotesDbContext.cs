@@ -15,11 +15,5 @@ namespace Notes.Data
         {
             optionsBuilder.UseLazyLoadingProxies();
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<UploadFile>().UseXminAsConcurrencyToken();
-            modelBuilder.Entity<UploadFileData>().UseXminAsConcurrencyToken();
-        }
     }
 }

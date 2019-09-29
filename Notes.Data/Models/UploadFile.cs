@@ -21,6 +21,11 @@ namespace Notes.Data.Models
         [Required]
         public long Length { get; set; }
 
+        [Timestamp]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Column("xmin", TypeName = "xid")]
+        public uint Version { get; set; }
+
         public virtual UploadFileData UploadFileData { get; set; }
     }
 }

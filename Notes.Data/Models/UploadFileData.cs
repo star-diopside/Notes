@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Notes.Data.Models
 {
@@ -13,6 +14,11 @@ namespace Notes.Data.Models
 
         [Column("data")]
         public byte[] Data { get; set; }
+
+        [Timestamp]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Column("xmin", TypeName = "xid")]
+        public uint Version { get; set; }
 
         public virtual UploadFile UploadFile { get; set; }
     }

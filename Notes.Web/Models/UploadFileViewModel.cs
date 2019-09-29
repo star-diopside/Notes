@@ -37,6 +37,7 @@ namespace Notes.Web.Models
             FileName = uploadFile.FileName;
             ContentType = uploadFile.ContentType;
             Length = uploadFile.Length;
+            Version = uploadFile.Version;
         }
 
         public UploadFile ToUploadFile() => UpdateUploadFile(new UploadFile());
