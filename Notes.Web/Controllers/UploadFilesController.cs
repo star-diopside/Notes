@@ -23,12 +23,12 @@ namespace Notes.Web.Controllers
             _uploadFileService = uploadFileService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> IndexAsync()
         {
             return View(await _uploadFileService.ListAsync());
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> DetailsAsync(int id)
         {
             var uploadFile = await _uploadFileService.GetDetailsAsync(id);
 
@@ -47,23 +47,23 @@ namespace Notes.Web.Controllers
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> Create(RequiredUploadFileViewModel uploadFile)
+        public async Task<IActionResult> CreateAsync(RequiredUploadFileViewModel uploadFile)
         {
             if (ModelState.IsValid)
             {
                 await _uploadFileService.CreateAsync(uploadFile);
                 TempData["Success"] = _localizer["File was successfully uploaded."].Value;
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             return View(uploadFile);
         }
 
-        public Task<IActionResult> Edit(int id) => Details(id);
+        public Task<IActionResult> EditAsync(int id) => DetailsAsync(id);
 
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> Edit(int id, UploadFileViewModel uploadFile)
+        public async Task<IActionResult> EditAsync(int id, UploadFileViewModel uploadFile)
         {
             if (ModelState.IsValid)
             {
@@ -71,7 +71,7 @@ namespace Notes.Web.Controllers
                 {
                     await _uploadFileService.EditAsync(id, uploadFile);
                     TempData["Success"] = _localizer["File was successfully updated."].Value;
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index");
                 }
                 catch (DbUpdateConcurrencyException e)
                 {
@@ -83,16 +83,16 @@ namespace Notes.Web.Controllers
             return View(uploadFile);
         }
 
-        public Task<IActionResult> Delete(int id) => Details(id);
+        public Task<IActionResult> DeleteAsync(int id) => DetailsAsync(id);
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int id, uint version)
+        public async Task<IActionResult> DeleteAsync(int id, uint version)
         {
             try
             {
                 await _uploadFileService.DeleteAsync(id, version);
                 TempData["Success"] = _localizer["File was successfully deleted."].Value;
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -102,7 +102,7 @@ namespace Notes.Web.Controllers
             }
         }
 
-        public async Task<IActionResult> Download(int id)
+        public async Task<IActionResult> DownloadAsync(int id)
         {
             var uploadFile = await _uploadFileService.GetDownloadDataAsync(id);
 
