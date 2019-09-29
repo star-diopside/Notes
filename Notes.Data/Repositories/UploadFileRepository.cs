@@ -19,17 +19,21 @@ namespace Notes.Data.Repositories
 
         public async Task<IEnumerable<TResult>> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector)
         {
-            return await _notesDbContext.UploadFiles.OrderBy(u => u.Id).Select(selector).ToListAsync();
+            return await _notesDbContext.UploadFiles.OrderBy(u => u.Id)
+                                                    .Select(selector)
+                                                    .ToListAsync();
         }
 
         public Task<UploadFile> FindByIdAsync(int id)
         {
-            return _notesDbContext.UploadFiles.FindAsync(id);
+            return _notesDbContext.UploadFiles.FindAsync(id).AsTask();
         }
 
         public Task<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector)
         {
-            return _notesDbContext.UploadFiles.Where(u => u.Id == id).Select(selector).SingleOrDefaultAsync();
+            return _notesDbContext.UploadFiles.Where(u => u.Id == id)
+                                              .Select(selector)
+                                              .SingleOrDefaultAsync();
         }
 
         public async Task AddAsync(UploadFile uploadFile)
@@ -40,14 +44,14 @@ namespace Notes.Data.Repositories
 
         public async Task UpdateAsync(UploadFile uploadFile, uint version)
         {
-            _notesDbContext.Entry(uploadFile).Property<uint>("xmin").OriginalValue = version;
+            _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = version;
             _notesDbContext.UploadFiles.Update(uploadFile);
             await _notesDbContext.SaveChangesAsync();
         }
 
         public async Task RemoveAsync(UploadFile uploadFile, uint version)
         {
-            _notesDbContext.Entry(uploadFile).Property<uint>("xmin").OriginalValue = version;
+            _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = version;
             _notesDbContext.UploadFiles.Remove(uploadFile);
             await _notesDbContext.SaveChangesAsync();
         }

@@ -13,13 +13,8 @@ namespace Notes.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies();
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<UploadFile>().ForNpgsqlUseXminAsConcurrencyToken();
-            modelBuilder.Entity<UploadFileData>().ForNpgsqlUseXminAsConcurrencyToken();
+            optionsBuilder.UseSnakeCaseNamingConvention()
+                          .UseLazyLoadingProxies();
         }
     }
 }
