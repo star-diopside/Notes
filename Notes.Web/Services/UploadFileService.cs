@@ -25,7 +25,7 @@ namespace Notes.Web.Services
             return _uploadFileRepository.FindByIdAsync(id, u => new UploadFileViewModel(u));
         }
 
-        public Task<UploadFile> GetDownloadDataAsync(int id)
+        public ValueTask<UploadFile> GetDownloadDataAsync(int id)
         {
             return _uploadFileRepository.FindByIdAsync(id);
         }

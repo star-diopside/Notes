@@ -11,7 +11,7 @@ namespace Notes.Web.Services
 
         Task<UploadFileViewModel> GetDetailsAsync(int id);
 
-        Task<UploadFile> GetDownloadDataAsync(int id);
+        ValueTask<UploadFile> GetDownloadDataAsync(int id);
 
         Task CreateAsync(UploadFileViewModel uploadFile);
 

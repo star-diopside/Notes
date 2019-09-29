@@ -24,9 +24,9 @@ namespace Notes.Data.Repositories
                                                     .ToListAsync();
         }
 
-        public Task<UploadFile> FindByIdAsync(int id)
+        public ValueTask<UploadFile> FindByIdAsync(int id)
         {
-            return _notesDbContext.UploadFiles.FindAsync(id).AsTask();
+            return _notesDbContext.UploadFiles.FindAsync(id);
         }
 
         public Task<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector)

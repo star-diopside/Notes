@@ -10,7 +10,7 @@ namespace Notes.Data.Repositories
     {
         Task<IEnumerable<TResult>> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector);
 
-        Task<UploadFile> FindByIdAsync(int id);
+        ValueTask<UploadFile> FindByIdAsync(int id);
 
         Task<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector);
 
