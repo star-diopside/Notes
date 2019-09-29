@@ -13,7 +13,8 @@ namespace Notes.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies();
+            optionsBuilder.UseSnakeCaseNamingConvention()
+                          .UseLazyLoadingProxies();
         }
     }
 }
