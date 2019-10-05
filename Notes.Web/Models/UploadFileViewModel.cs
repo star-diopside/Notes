@@ -45,6 +45,7 @@ namespace Notes.Web.Models
         public UploadFile UpdateUploadFile(UploadFile uploadFile)
         {
             uploadFile.FileName = GetFileName();
+            uploadFile.Version = Version;
 
             if (File != null)
             {

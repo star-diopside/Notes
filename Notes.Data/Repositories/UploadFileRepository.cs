@@ -42,16 +42,16 @@ namespace Notes.Data.Repositories
             await _notesDbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(UploadFile uploadFile, uint version)
+        public async Task UpdateAsync(UploadFile uploadFile)
         {
-            _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = version;
+            _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = uploadFile.Version;
             _notesDbContext.UploadFiles.Update(uploadFile);
             await _notesDbContext.SaveChangesAsync();
         }
 
-        public async Task RemoveAsync(UploadFile uploadFile, uint version)
+        public async Task RemoveAsync(UploadFile uploadFile)
         {
-            _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = version;
+            _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = uploadFile.Version;
             _notesDbContext.UploadFiles.Remove(uploadFile);
             await _notesDbContext.SaveChangesAsync();
         }

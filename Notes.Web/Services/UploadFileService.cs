@@ -38,12 +38,12 @@ namespace Notes.Web.Services
         public async Task EditAsync(int id, UploadFileViewModel uploadFile)
         {
             var model = await _uploadFileRepository.FindByIdAsync(id);
-            await _uploadFileRepository.UpdateAsync(uploadFile.UpdateUploadFile(model), uploadFile.Version);
+            await _uploadFileRepository.UpdateAsync(uploadFile.UpdateUploadFile(model));
         }
 
         public Task DeleteAsync(int id, uint version)
         {
-            return _uploadFileRepository.RemoveAsync(new UploadFile { Id = id }, version);
+            return _uploadFileRepository.RemoveAsync(new UploadFile { Id = id, Version = version });
         }
     }
 }
