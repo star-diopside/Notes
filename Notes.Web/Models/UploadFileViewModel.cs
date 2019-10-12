@@ -3,6 +3,7 @@ using Notes.Data.Models;
 using Notes.Web.Validators;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Notes.Web.Models
 {
@@ -40,9 +41,9 @@ namespace Notes.Web.Models
             Version = uploadFile.Version;
         }
 
-        public UploadFile ToUploadFile() => UpdateUploadFile(new UploadFile());
+        public Task<UploadFile> ToUploadFileAsync() => UpdateUploadFileAsync(new UploadFile());
 
-        public UploadFile UpdateUploadFile(UploadFile uploadFile)
+        public async Task<UploadFile> UpdateUploadFileAsync(UploadFile uploadFile)
         {
             uploadFile.FileName = GetFileName();
             uploadFile.Version = Version;
@@ -56,7 +57,7 @@ namespace Notes.Web.Models
 
                 uploadFile.ContentType = File.ContentType;
                 uploadFile.Length = File.Length;
-                uploadFile.UploadFileData.Data = GetFileData();
+                uploadFile.UploadFileData.Data = await GetFileDataAsync();
             }
 
             return uploadFile;
@@ -81,13 +82,11 @@ namespace Notes.Web.Models
             }
         }
 
-        private byte[] GetFileData()
+        private async Task<byte[]> GetFileDataAsync()
         {
-            using (var stream = new MemoryStream())
-            {
-                File.CopyTo(stream);
-                return stream.ToArray();
-            }
+            using var stream = new MemoryStream();
+            await File.CopyToAsync(stream);
+            return stream.ToArray();
         }
     }
 }

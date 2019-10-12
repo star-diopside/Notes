@@ -30,15 +30,15 @@ namespace Notes.Web.Services
             return _uploadFileRepository.FindByIdAsync(id);
         }
 
-        public Task CreateAsync(UploadFileViewModel uploadFile)
+        public async Task CreateAsync(UploadFileViewModel uploadFile)
         {
-            return _uploadFileRepository.AddAsync(uploadFile.ToUploadFile());
+            await _uploadFileRepository.AddAsync(await uploadFile.ToUploadFileAsync());
         }
 
         public async Task EditAsync(int id, UploadFileViewModel uploadFile)
         {
             var model = await _uploadFileRepository.FindByIdAsync(id);
-            await _uploadFileRepository.UpdateAsync(uploadFile.UpdateUploadFile(model));
+            await _uploadFileRepository.UpdateAsync(await uploadFile.UpdateUploadFileAsync(model));
         }
 
         public Task DeleteAsync(int id, uint version)
