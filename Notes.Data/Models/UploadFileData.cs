@@ -9,13 +9,13 @@ namespace Notes.Data.Models
 
         public int UploadFileId { get; set; }
 
-        public byte[] Data { get; set; }
+        public byte[]? Data { get; set; }
 
         [Timestamp]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Column("xmin", TypeName = "xid")]
         public uint Version { get; set; }
 
-        public virtual UploadFile UploadFile { get; set; }
+        public virtual UploadFile? UploadFile { get; set; }
     }
 }

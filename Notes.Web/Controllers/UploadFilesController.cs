@@ -111,7 +111,7 @@ namespace Notes.Web.Controllers
                 return NotFound();
             }
 
-            return File(uploadFile.UploadFileData.Data, uploadFile.ContentType, uploadFile.FileName);
+            return File(uploadFile.UploadFileData?.Data, uploadFile.ContentType, uploadFile.FileName);
         }
     }
 }

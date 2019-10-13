@@ -5,7 +5,7 @@ namespace Notes.Data
 {
     public class NotesDbContext : DbContext
     {
-        public DbSet<UploadFile> UploadFiles { get; set; }
+        public DbSet<UploadFile> UploadFiles { get; set; } = null!;
 
         public NotesDbContext(DbContextOptions<NotesDbContext> options) : base(options)
         {

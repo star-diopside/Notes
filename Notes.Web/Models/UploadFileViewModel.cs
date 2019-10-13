@@ -14,17 +14,17 @@ namespace Notes.Web.Models
 
         [Display(Name = "File Name")]
         [FileNameValidation(ErrorMessage = "The {0} field is using illegal characters.")]
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         [Display(Name = "Content Type")]
-        public string ContentType { get; set; }
+        public string? ContentType { get; set; }
 
         [Display(Name = "File Size")]
         [DisplayFormat(DataFormatString = "{0:#,#}")]
         public long Length { get; set; }
 
         [Display(Name = "File")]
-        public virtual IFormFile File { get; set; }
+        public virtual IFormFile? File { get; set; }
 
         public uint Version { get; set; }
 
@@ -45,25 +45,21 @@ namespace Notes.Web.Models
 
         public async Task<UploadFile> UpdateUploadFileAsync(UploadFile uploadFile)
         {
-            uploadFile.FileName = GetFileName();
+            uploadFile.FileName = GetFileName() ?? uploadFile.FileName;
             uploadFile.Version = Version;
 
             if (File != null)
             {
-                if (uploadFile.UploadFileData == null)
-                {
-                    uploadFile.UploadFileData = new UploadFileData();
-                }
-
+                uploadFile.UploadFileData ??= new UploadFileData();
                 uploadFile.ContentType = File.ContentType;
                 uploadFile.Length = File.Length;
-                uploadFile.UploadFileData.Data = await GetFileDataAsync();
+                uploadFile.UploadFileData.Data = await GetFileDataAsync(File);
             }
 
             return uploadFile;
         }
 
-        private string GetFileName()
+        private string? GetFileName()
         {
             if (string.IsNullOrEmpty(FileName))
             {
@@ -75,17 +71,17 @@ namespace Notes.Web.Models
 
                 if (string.IsNullOrEmpty(Path.GetExtension(name)))
                 {
-                    name = Path.GetFileNameWithoutExtension(name) + Path.GetExtension(File.FileName);
+                    name = Path.GetFileNameWithoutExtension(name) + Path.GetExtension(File?.FileName);
                 }
 
                 return name;
             }
         }
 
-        private async Task<byte[]> GetFileDataAsync()
+        private static async Task<byte[]> GetFileDataAsync(IFormFile file)
         {
             using var stream = new MemoryStream();
-            await File.CopyToAsync(stream);
+            await file.CopyToAsync(stream);
             return stream.ToArray();
         }
     }

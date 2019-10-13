@@ -8,10 +8,10 @@ namespace Notes.Data.Models
         public int Id { get; set; }
 
         [Required]
-        public string FileName { get; set; }
+        public string FileName { get; set; } = string.Empty;
 
         [Required]
-        public string ContentType { get; set; }
+        public string ContentType { get; set; } = string.Empty;
 
         [Required]
         public long Length { get; set; }
@@ -21,6 +21,6 @@ namespace Notes.Data.Models
         [Column("xmin", TypeName = "xid")]
         public uint Version { get; set; }
 
-        public virtual UploadFileData UploadFileData { get; set; }
+        public virtual UploadFileData? UploadFileData { get; set; }
     }
 }
