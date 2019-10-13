@@ -41,9 +41,9 @@ namespace Notes.Web.Models
             Version = uploadFile.Version;
         }
 
-        public Task<UploadFile> ToUploadFileAsync() => UpdateUploadFileAsync(new UploadFile());
+        public ValueTask<UploadFile> ToUploadFileAsync() => UpdateUploadFileAsync(new UploadFile());
 
-        public async Task<UploadFile> UpdateUploadFileAsync(UploadFile uploadFile)
+        public async ValueTask<UploadFile> UpdateUploadFileAsync(UploadFile uploadFile)
         {
             uploadFile.FileName = GetFileName() ?? uploadFile.FileName;
             uploadFile.Version = Version;

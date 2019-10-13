@@ -14,10 +14,10 @@ namespace Notes.Data.Repositories
 
         Task<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector);
 
-        Task AddAsync(UploadFile uploadFile);
+        Task<int> AddAsync(UploadFile uploadFile);
 
-        Task UpdateAsync(UploadFile uploadFile);
+        Task<int> UpdateAsync(UploadFile uploadFile);
 
-        Task RemoveAsync(UploadFile uploadFile);
+        Task<int> RemoveAsync(UploadFile uploadFile);
     }
 }

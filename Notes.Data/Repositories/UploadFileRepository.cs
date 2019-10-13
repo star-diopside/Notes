@@ -36,24 +36,24 @@ namespace Notes.Data.Repositories
                                               .SingleOrDefaultAsync();
         }
 
-        public async Task AddAsync(UploadFile uploadFile)
+        public Task<int> AddAsync(UploadFile uploadFile)
         {
             _notesDbContext.UploadFiles.Add(uploadFile);
-            await _notesDbContext.SaveChangesAsync();
+            return _notesDbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(UploadFile uploadFile)
+        public Task<int> UpdateAsync(UploadFile uploadFile)
         {
             _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = uploadFile.Version;
             _notesDbContext.UploadFiles.Update(uploadFile);
-            await _notesDbContext.SaveChangesAsync();
+            return _notesDbContext.SaveChangesAsync();
         }
 
-        public async Task RemoveAsync(UploadFile uploadFile)
+        public Task<int> RemoveAsync(UploadFile uploadFile)
         {
             _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = uploadFile.Version;
             _notesDbContext.UploadFiles.Remove(uploadFile);
-            await _notesDbContext.SaveChangesAsync();
+            return _notesDbContext.SaveChangesAsync();
         }
     }
 }

@@ -41,9 +41,9 @@ namespace Notes.Web.Services
             await _uploadFileRepository.UpdateAsync(await uploadFile.UpdateUploadFileAsync(model));
         }
 
-        public Task DeleteAsync(int id, uint version)
+        public async Task DeleteAsync(int id, uint version)
         {
-            return _uploadFileRepository.RemoveAsync(new UploadFile { Id = id, Version = version });
+            await _uploadFileRepository.RemoveAsync(new UploadFile { Id = id, Version = version });
         }
     }
 }

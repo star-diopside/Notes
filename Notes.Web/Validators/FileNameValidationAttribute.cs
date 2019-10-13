@@ -7,9 +7,7 @@ namespace Notes.Web.Validators
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var v = value as string;
-
-            if (v != null)
+            if (value is string v)
             {
                 foreach (char c in Path.GetInvalidFileNameChars())
                 {

@@ -47,7 +47,7 @@ namespace Notes.Web.Controllers
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> CreateAsync(RequiredUploadFileViewModel uploadFile)
+        public async ValueTask<IActionResult> CreateAsync(RequiredUploadFileViewModel uploadFile)
         {
             if (ModelState.IsValid)
             {
@@ -60,10 +60,9 @@ namespace Notes.Web.Controllers
 
         public Task<IActionResult> EditAsync(int id) => DetailsAsync(id);
 
-
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> EditAsync(int id, UploadFileViewModel uploadFile)
+        public async ValueTask<IActionResult> EditAsync(int id, UploadFileViewModel uploadFile)
         {
             if (ModelState.IsValid)
             {
