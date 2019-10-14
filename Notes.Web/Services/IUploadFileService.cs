@@ -7,16 +7,16 @@ namespace Notes.Web.Services
 {
     public interface IUploadFileService
     {
-        Task<IEnumerable<UploadFileViewModel>> ListAsync();
+        ValueTask<IEnumerable<UploadFileViewModel>> ListAsync();
 
-        Task<UploadFileViewModel> GetDetailsAsync(int id);
+        ValueTask<UploadFileViewModel> GetDetailsAsync(int id);
 
         ValueTask<UploadFile> GetDownloadDataAsync(int id);
 
-        Task CreateAsync(UploadFileViewModel uploadFile);
+        ValueTask CreateAsync(UploadFileViewModel uploadFile);
 
-        Task EditAsync(int id, UploadFileViewModel uploadFile);
+        ValueTask EditAsync(int id, UploadFileViewModel uploadFile);
 
-        Task DeleteAsync(int id, uint version);
+        ValueTask DeleteAsync(int id, uint version);
     }
 }

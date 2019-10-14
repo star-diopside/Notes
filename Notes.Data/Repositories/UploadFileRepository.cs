@@ -17,7 +17,7 @@ namespace Notes.Data.Repositories
             _notesDbContext = notesDbContext;
         }
 
-        public async Task<IEnumerable<TResult>> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector)
+        public async ValueTask<IEnumerable<TResult>> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector)
         {
             return await _notesDbContext.UploadFiles.OrderBy(u => u.Id)
                                                     .Select(selector)
@@ -29,31 +29,31 @@ namespace Notes.Data.Repositories
             return _notesDbContext.UploadFiles.FindAsync(id);
         }
 
-        public Task<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector)
+        public async ValueTask<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector)
         {
-            return _notesDbContext.UploadFiles.Where(u => u.Id == id)
-                                              .Select(selector)
-                                              .SingleOrDefaultAsync();
+            return await _notesDbContext.UploadFiles.Where(u => u.Id == id)
+                                                    .Select(selector)
+                                                    .SingleOrDefaultAsync();
         }
 
-        public Task<int> AddAsync(UploadFile uploadFile)
+        public async ValueTask<int> AddAsync(UploadFile uploadFile)
         {
             _notesDbContext.UploadFiles.Add(uploadFile);
-            return _notesDbContext.SaveChangesAsync();
+            return await _notesDbContext.SaveChangesAsync();
         }
 
-        public Task<int> UpdateAsync(UploadFile uploadFile)
+        public async ValueTask<int> UpdateAsync(UploadFile uploadFile)
         {
             _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = uploadFile.Version;
             _notesDbContext.UploadFiles.Update(uploadFile);
-            return _notesDbContext.SaveChangesAsync();
+            return await _notesDbContext.SaveChangesAsync();
         }
 
-        public Task<int> RemoveAsync(UploadFile uploadFile)
+        public async ValueTask<int> RemoveAsync(UploadFile uploadFile)
         {
             _notesDbContext.Entry(uploadFile).Property(e => e.Version).OriginalValue = uploadFile.Version;
             _notesDbContext.UploadFiles.Remove(uploadFile);
-            return _notesDbContext.SaveChangesAsync();
+            return await _notesDbContext.SaveChangesAsync();
         }
     }
 }

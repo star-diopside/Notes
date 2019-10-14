@@ -8,16 +8,16 @@ namespace Notes.Data.Repositories
 {
     public interface IUploadFileRepository
     {
-        Task<IEnumerable<TResult>> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector);
+        ValueTask<IEnumerable<TResult>> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector);
 
         ValueTask<UploadFile> FindByIdAsync(int id);
 
-        Task<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector);
+        ValueTask<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector);
 
-        Task<int> AddAsync(UploadFile uploadFile);
+        ValueTask<int> AddAsync(UploadFile uploadFile);
 
-        Task<int> UpdateAsync(UploadFile uploadFile);
+        ValueTask<int> UpdateAsync(UploadFile uploadFile);
 
-        Task<int> RemoveAsync(UploadFile uploadFile);
+        ValueTask<int> RemoveAsync(UploadFile uploadFile);
     }
 }

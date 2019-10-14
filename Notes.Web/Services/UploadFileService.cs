@@ -15,12 +15,12 @@ namespace Notes.Web.Services
             _uploadFileRepository = uploadFileRepository;
         }
 
-        public Task<IEnumerable<UploadFileViewModel>> ListAsync()
+        public ValueTask<IEnumerable<UploadFileViewModel>> ListAsync()
         {
             return _uploadFileRepository.FindAllAsync(u => new UploadFileViewModel(u));
         }
 
-        public Task<UploadFileViewModel> GetDetailsAsync(int id)
+        public ValueTask<UploadFileViewModel> GetDetailsAsync(int id)
         {
             return _uploadFileRepository.FindByIdAsync(id, u => new UploadFileViewModel(u));
         }
@@ -30,18 +30,18 @@ namespace Notes.Web.Services
             return _uploadFileRepository.FindByIdAsync(id);
         }
 
-        public async Task CreateAsync(UploadFileViewModel uploadFile)
+        public async ValueTask CreateAsync(UploadFileViewModel uploadFile)
         {
             await _uploadFileRepository.AddAsync(await uploadFile.ToUploadFileAsync());
         }
 
-        public async Task EditAsync(int id, UploadFileViewModel uploadFile)
+        public async ValueTask EditAsync(int id, UploadFileViewModel uploadFile)
         {
             var model = await _uploadFileRepository.FindByIdAsync(id);
             await _uploadFileRepository.UpdateAsync(await uploadFile.UpdateUploadFileAsync(model));
         }
 
-        public async Task DeleteAsync(int id, uint version)
+        public async ValueTask DeleteAsync(int id, uint version)
         {
             await _uploadFileRepository.RemoveAsync(new UploadFile { Id = id, Version = version });
         }
