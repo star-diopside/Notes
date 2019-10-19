@@ -14,29 +14,29 @@ namespace Notes.Web.Tests.Services
     public class UploadFileServiceTest
     {
         [Fact(DisplayName = "ListAsync() : Not Found")]
-        public async Task ListAsyncTest1()
+        public void ListAsyncTest1()
         {
             var mock = new Mock<IUploadFileRepository>();
             mock.Setup(m => m.FindAllAsync(It.IsAny<Expression<Func<UploadFile, UploadFileViewModel>>>()))
-                .ReturnsAsync(Enumerable.Empty<UploadFileViewModel>());
+                .Returns(Enumerable.Empty<UploadFileViewModel>().ToAsyncEnumerable());
 
             var service = new UploadFileService(mock.Object);
-            var files = await service.ListAsync();
+            var files = service.ListAsync();
 
-            Assert.Empty(files);
+            Assert.Empty(files.ToEnumerable());
         }
 
         [Fact(DisplayName = "ListAsync() : 1 Hit")]
-        public async Task ListAsyncTest2()
+        public void ListAsyncTest2()
         {
             var mock = new Mock<IUploadFileRepository>();
             mock.Setup(m => m.FindAllAsync(It.IsAny<Expression<Func<UploadFile, UploadFileViewModel>>>()))
-                .ReturnsAsync(new[] { new UploadFileViewModel() { Id = 0 } });
+                .Returns(new[] { new UploadFileViewModel() { Id = 0 } }.ToAsyncEnumerable());
 
             var service = new UploadFileService(mock.Object);
-            var files = await service.ListAsync();
+            var files = service.ListAsync();
 
-            Assert.Single(files);
+            Assert.Single(files.ToEnumerable());
         }
 
         [Fact(DisplayName = "ListAsync() : 10 Hits")]
@@ -44,13 +44,12 @@ namespace Notes.Web.Tests.Services
         {
             var mock = new Mock<IUploadFileRepository>();
             mock.Setup(m => m.FindAllAsync(It.IsAny<Expression<Func<UploadFile, UploadFileViewModel>>>()))
-                .ReturnsAsync(Enumerable.Range(0, 10).Select(i => new UploadFileViewModel() { Id = i }));
+                .Returns(Enumerable.Range(0, 10).Select(i => new UploadFileViewModel() { Id = i }).ToAsyncEnumerable());
 
             var service = new UploadFileService(mock.Object);
-            var files = await service.ListAsync();
+            var files = service.ListAsync();
 
-            Assert.NotEmpty(files);
-            Assert.Equal(10, files.Count());
+            Assert.Equal(10, await files.CountAsync());
         }
     }
 }

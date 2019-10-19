@@ -8,7 +8,7 @@ namespace Notes.Data.Repositories
 {
     public interface IUploadFileRepository
     {
-        ValueTask<IEnumerable<TResult>> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector);
+        IAsyncEnumerable<TResult> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector);
 
         ValueTask<UploadFile> FindByIdAsync(int id);
 

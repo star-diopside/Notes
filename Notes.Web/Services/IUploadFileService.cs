@@ -7,7 +7,7 @@ namespace Notes.Web.Services
 {
     public interface IUploadFileService
     {
-        ValueTask<IEnumerable<UploadFileViewModel>> ListAsync();
+        IAsyncEnumerable<UploadFileViewModel> ListAsync();
 
         ValueTask<UploadFileViewModel> GetDetailsAsync(int id);
 

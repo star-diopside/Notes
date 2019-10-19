@@ -17,11 +17,11 @@ namespace Notes.Data.Repositories
             _notesDbContext = notesDbContext;
         }
 
-        public async ValueTask<IEnumerable<TResult>> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector)
+        public IAsyncEnumerable<TResult> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector)
         {
-            return await _notesDbContext.UploadFiles.OrderBy(u => u.Id)
-                                                    .Select(selector)
-                                                    .ToListAsync();
+            return _notesDbContext.UploadFiles.OrderBy(u => u.Id)
+                                              .Select(selector)
+                                              .AsAsyncEnumerable();
         }
 
         public ValueTask<UploadFile> FindByIdAsync(int id)

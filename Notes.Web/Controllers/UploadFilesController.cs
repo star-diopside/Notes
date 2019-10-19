@@ -23,9 +23,9 @@ namespace Notes.Web.Controllers
             _uploadFileService = uploadFileService;
         }
 
-        public async Task<IActionResult> IndexAsync()
+        public IActionResult Index()
         {
-            return View(await _uploadFileService.ListAsync());
+            return View(_uploadFileService.ListAsync());
         }
 
         public async Task<IActionResult> DetailsAsync(int id)

@@ -15,7 +15,7 @@ namespace Notes.Web.Services
             _uploadFileRepository = uploadFileRepository;
         }
 
-        public ValueTask<IEnumerable<UploadFileViewModel>> ListAsync()
+        public IAsyncEnumerable<UploadFileViewModel> ListAsync()
         {
             return _uploadFileRepository.FindAllAsync(u => new UploadFileViewModel(u));
         }
