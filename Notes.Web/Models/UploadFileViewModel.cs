@@ -3,6 +3,9 @@ using Notes.Data.Models;
 using Notes.Web.Validators;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Notes.Web.Models
@@ -23,6 +26,9 @@ namespace Notes.Web.Models
         [DisplayFormat(DataFormatString = "{0:#,#}")]
         public long Length { get; set; }
 
+        [Display(Name = "Hash Value")]
+        public string? HashValue { get; set; }
+
         [Display(Name = "File")]
         public virtual IFormFile? File { get; set; }
 
@@ -38,6 +44,7 @@ namespace Notes.Web.Models
             FileName = uploadFile.FileName;
             ContentType = uploadFile.ContentType;
             Length = uploadFile.Length;
+            HashValue = uploadFile.HashValue;
             Version = uploadFile.Version;
         }
 
@@ -53,6 +60,7 @@ namespace Notes.Web.Models
                 uploadFile.UploadFileData ??= new UploadFileData();
                 uploadFile.ContentType = File.ContentType;
                 uploadFile.Length = File.Length;
+                uploadFile.HashValue = await GetFileHashValueAsync(File);
                 uploadFile.UploadFileData.Data = await GetFileDataAsync(File);
             }
 
@@ -76,6 +84,17 @@ namespace Notes.Web.Models
 
                 return name;
             }
+        }
+
+        private static async Task<string> GetFileHashValueAsync(IFormFile file)
+        {
+            using var algorithm = SHA256.Create();
+            using var stream = file.OpenReadStream();
+            var hash = await Task.Run(() => algorithm.ComputeHash(stream));
+            return hash.Select(b => b.ToString("x2"))
+                       .Aggregate(new StringBuilder(hash.Length * 2),
+                                  (sb, s) => sb.Append(s),
+                                  sb => sb.ToString());
         }
 
         private static async Task<byte[]> GetFileDataAsync(IFormFile file)

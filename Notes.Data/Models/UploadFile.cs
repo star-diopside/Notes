@@ -16,6 +16,9 @@ namespace Notes.Data.Models
         [Required]
         public long Length { get; set; }
 
+        [Required]
+        public string HashValue { get; set; } = string.Empty;
+
         [Timestamp]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Column("xmin", TypeName = "xid")]
