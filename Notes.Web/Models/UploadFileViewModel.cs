@@ -60,8 +60,7 @@ namespace Notes.Web.Models
                 uploadFile.UploadFileData ??= new UploadFileData();
                 uploadFile.ContentType = File.ContentType;
                 uploadFile.Length = File.Length;
-                uploadFile.HashValue = await GetFileHashValueAsync(File);
-                uploadFile.UploadFileData.Data = await GetFileDataAsync(File);
+                (uploadFile.UploadFileData.Data, uploadFile.HashValue) = await GetFileDataAsync(File);
             }
 
             return uploadFile;
@@ -86,22 +85,27 @@ namespace Notes.Web.Models
             }
         }
 
-        private static async Task<string> GetFileHashValueAsync(IFormFile file)
+        private static async Task<(byte[] data, string hashValue)> GetFileDataAsync(IFormFile file)
         {
-            using var algorithm = SHA256.Create();
-            using var stream = file.OpenReadStream();
-            var hash = await Task.Run(() => algorithm.ComputeHash(stream));
-            return hash.Select(b => b.ToString("x2"))
-                       .Aggregate(new StringBuilder(hash.Length * 2),
-                                  (sb, s) => sb.Append(s),
-                                  sb => sb.ToString());
-        }
+            byte[] data;
+            string hashValue;
 
-        private static async Task<byte[]> GetFileDataAsync(IFormFile file)
-        {
-            using var stream = new MemoryStream();
-            await file.CopyToAsync(stream);
-            return stream.ToArray();
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                data = stream.ToArray();
+            }
+
+            using (var algorithm = SHA256.Create())
+            {
+                var hash = await Task.Run(() => algorithm.ComputeHash(data));
+                hashValue = hash.Select(b => b.ToString("x2"))
+                                .Aggregate(new StringBuilder(hash.Length * 2),
+                                           (sb, s) => sb.Append(s),
+                                           sb => sb.ToString());
+            }
+
+            return (data, hashValue);
         }
     }
 }
