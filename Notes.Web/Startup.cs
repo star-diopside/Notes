@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Notes.Data;
 using Notes.Data.Repositories;
+using Notes.Web.Data;
 using Notes.Web.Services;
 using System.Globalization;
 
@@ -46,15 +48,21 @@ namespace Notes.Web
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(
+                Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<NotesDbContext>(options => options.UseNpgsql(
+                Configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("Notes.Web")));
+
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews()
                 .AddDataAnnotationsLocalization(options =>
                 {
                     options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(Startup));
                 })
                 .AddViewLocalization();
-
-            services.AddDbContext<NotesDbContext>(optionsBuilder => optionsBuilder.UseNpgsql(
-                Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Notes.Web")));
+            services.AddRazorPages();
 
             services.AddScoped<IUploadFileRepository, UploadFileRepository>();
             services.AddScoped<IUploadFileService, UploadFileService>();
@@ -81,6 +89,7 @@ namespace Notes.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -94,6 +103,7 @@ namespace Notes.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -101,6 +111,7 @@ namespace Notes.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

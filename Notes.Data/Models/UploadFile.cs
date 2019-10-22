@@ -17,6 +17,7 @@ namespace Notes.Data.Models
         public long Length { get; set; }
 
         [Required]
+        [MaxLength(64)]
         public string HashValue { get; set; } = string.Empty;
 
         [Timestamp]

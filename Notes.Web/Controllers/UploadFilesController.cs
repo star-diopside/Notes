@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Notes.Web.Controllers
 {
+    [Authorize]
     [AutoValidateAntiforgeryToken]
     public class UploadFilesController : Controller
     {
