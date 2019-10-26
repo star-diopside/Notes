@@ -52,7 +52,7 @@ namespace Notes.Web
                 Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<NotesDbContext>(options => options.UseNpgsql(
                 Configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly("Notes.Web")));
+                b => b.MigrationsAssembly(typeof(Startup).Assembly.FullName)));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
