@@ -5,7 +5,7 @@ namespace Notes.Web.Validators
 {
     public class FileNameValidationAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             if (value is string v)
             {
