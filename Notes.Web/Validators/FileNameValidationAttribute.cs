@@ -1,24 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.IO;
 
-namespace Notes.Web.Validators
+namespace Notes.Web.Validators;
+
+public class FileNameValidationAttribute : ValidationAttribute
 {
-    public class FileNameValidationAttribute : ValidationAttribute
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        if (value is string v)
         {
-            if (value is string v)
+            foreach (char c in Path.GetInvalidFileNameChars())
             {
-                foreach (char c in Path.GetInvalidFileNameChars())
+                if (v.Contains(c))
                 {
-                    if (v.Contains(c))
-                    {
-                        return new ValidationResult(null);
-                    }
+                    return new ValidationResult(null);
                 }
             }
-
-            return ValidationResult.Success;
         }
+
+        return ValidationResult.Success;
     }
 }

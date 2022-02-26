@@ -1,20 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notes.Data.Models;
 
-namespace Notes.Data
+namespace Notes.Data;
+
+public class NotesDbContext : DbContext
 {
-    public class NotesDbContext : DbContext
+    public DbSet<UploadFile> UploadFiles { get; set; } = null!;
+
+    public NotesDbContext(DbContextOptions<NotesDbContext> options) : base(options)
     {
-        public DbSet<UploadFile> UploadFiles { get; set; } = null!;
+    }
 
-        public NotesDbContext(DbContextOptions<NotesDbContext> options) : base(options)
-        {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSnakeCaseNamingConvention()
-                          .UseLazyLoadingProxies();
-        }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSnakeCaseNamingConvention()
+                      .UseLazyLoadingProxies();
     }
 }

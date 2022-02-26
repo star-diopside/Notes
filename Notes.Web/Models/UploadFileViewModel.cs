@@ -1,111 +1,106 @@
-﻿using Microsoft.AspNetCore.Http;
-using Notes.Data.Models;
+﻿using Notes.Data.Models;
 using Notes.Web.Validators;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Notes.Web.Models
+namespace Notes.Web.Models;
+
+public class UploadFileViewModel
 {
-    public class UploadFileViewModel
+    [Display(Name = "ID")]
+    public int Id { get; set; }
+
+    [Display(Name = "File Name")]
+    [FileNameValidation(ErrorMessage = "The {0} field is using illegal characters.")]
+    public string? FileName { get; set; }
+
+    [Display(Name = "Content Type")]
+    public string? ContentType { get; set; }
+
+    [Display(Name = "File Size")]
+    [DisplayFormat(DataFormatString = "{0:#,#}")]
+    public long Length { get; set; }
+
+    [Display(Name = "Hash Value")]
+    public string? HashValue { get; set; }
+
+    [Display(Name = "File")]
+    public virtual IFormFile? File { get; set; }
+
+    public uint Version { get; set; }
+
+    public UploadFileViewModel()
     {
-        [Display(Name = "ID")]
-        public int Id { get; set; }
+    }
 
-        [Display(Name = "File Name")]
-        [FileNameValidation(ErrorMessage = "The {0} field is using illegal characters.")]
-        public string? FileName { get; set; }
+    public UploadFileViewModel(UploadFile uploadFile)
+    {
+        Id = uploadFile.Id;
+        FileName = uploadFile.FileName;
+        ContentType = uploadFile.ContentType;
+        Length = uploadFile.Length;
+        HashValue = uploadFile.HashValue;
+        Version = uploadFile.Version;
+    }
 
-        [Display(Name = "Content Type")]
-        public string? ContentType { get; set; }
+    public ValueTask<UploadFile> ToUploadFileAsync() => UpdateUploadFileAsync(new UploadFile());
 
-        [Display(Name = "File Size")]
-        [DisplayFormat(DataFormatString = "{0:#,#}")]
-        public long Length { get; set; }
+    public async ValueTask<UploadFile> UpdateUploadFileAsync(UploadFile uploadFile)
+    {
+        uploadFile.FileName = GetFileName() ?? uploadFile.FileName;
+        uploadFile.Version = Version;
 
-        [Display(Name = "Hash Value")]
-        public string? HashValue { get; set; }
-
-        [Display(Name = "File")]
-        public virtual IFormFile? File { get; set; }
-
-        public uint Version { get; set; }
-
-        public UploadFileViewModel()
+        if (File is not null)
         {
+            uploadFile.UploadFileData ??= new UploadFileData();
+            uploadFile.ContentType = File.ContentType;
+            uploadFile.Length = File.Length;
+            (uploadFile.UploadFileData.Data, uploadFile.HashValue) = await GetFileDataAsync(File);
         }
 
-        public UploadFileViewModel(UploadFile uploadFile)
+        return uploadFile;
+    }
+
+    private string? GetFileName()
+    {
+        if (string.IsNullOrEmpty(FileName))
         {
-            Id = uploadFile.Id;
-            FileName = uploadFile.FileName;
-            ContentType = uploadFile.ContentType;
-            Length = uploadFile.Length;
-            HashValue = uploadFile.HashValue;
-            Version = uploadFile.Version;
+            return File is null ? null : Path.GetFileName(File.FileName);
+        }
+        else
+        {
+            var name = Path.GetFileName(FileName);
+
+            if (string.IsNullOrEmpty(Path.GetExtension(name)))
+            {
+                name = Path.GetFileNameWithoutExtension(name) + Path.GetExtension(File?.FileName);
+            }
+
+            return name;
+        }
+    }
+
+    private static async Task<(byte[] data, string hashValue)> GetFileDataAsync(IFormFile file)
+    {
+        byte[] data;
+        string hashValue;
+
+        using (var stream = new MemoryStream())
+        {
+            await file.CopyToAsync(stream);
+            data = stream.ToArray();
         }
 
-        public ValueTask<UploadFile> ToUploadFileAsync() => UpdateUploadFileAsync(new UploadFile());
-
-        public async ValueTask<UploadFile> UpdateUploadFileAsync(UploadFile uploadFile)
+        using (var algorithm = SHA256.Create())
         {
-            uploadFile.FileName = GetFileName() ?? uploadFile.FileName;
-            uploadFile.Version = Version;
-
-            if (File != null)
-            {
-                uploadFile.UploadFileData ??= new UploadFileData();
-                uploadFile.ContentType = File.ContentType;
-                uploadFile.Length = File.Length;
-                (uploadFile.UploadFileData.Data, uploadFile.HashValue) = await GetFileDataAsync(File);
-            }
-
-            return uploadFile;
+            var hash = await Task.Run(() => algorithm.ComputeHash(data));
+            hashValue = hash.Select(b => b.ToString("x2"))
+                            .Aggregate(new StringBuilder(hash.Length * 2),
+                                       (sb, s) => sb.Append(s),
+                                       sb => sb.ToString());
         }
 
-        private string? GetFileName()
-        {
-            if (string.IsNullOrEmpty(FileName))
-            {
-                return File == null ? null : Path.GetFileName(File.FileName);
-            }
-            else
-            {
-                var name = Path.GetFileName(FileName);
-
-                if (string.IsNullOrEmpty(Path.GetExtension(name)))
-                {
-                    name = Path.GetFileNameWithoutExtension(name) + Path.GetExtension(File?.FileName);
-                }
-
-                return name;
-            }
-        }
-
-        private static async Task<(byte[] data, string hashValue)> GetFileDataAsync(IFormFile file)
-        {
-            byte[] data;
-            string hashValue;
-
-            using (var stream = new MemoryStream())
-            {
-                await file.CopyToAsync(stream);
-                data = stream.ToArray();
-            }
-
-            using (var algorithm = SHA256.Create())
-            {
-                var hash = await Task.Run(() => algorithm.ComputeHash(data));
-                hashValue = hash.Select(b => b.ToString("x2"))
-                                .Aggregate(new StringBuilder(hash.Length * 2),
-                                           (sb, s) => sb.Append(s),
-                                           sb => sb.ToString());
-            }
-
-            return (data, hashValue);
-        }
+        return (data, hashValue);
     }
 }

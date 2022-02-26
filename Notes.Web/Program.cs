@@ -1,20 +1,15 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using Notes.Web;
 
-namespace Notes.Web
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+var builder = WebApplication.CreateBuilder(args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
-}
+var startup = new Startup(builder.Configuration);
+
+// Add services to the container.
+startup.ConfigureServices(builder.Services);
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+startup.Configure(app, app.Environment);
+
+app.Run();
