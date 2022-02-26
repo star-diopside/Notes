@@ -7,13 +7,13 @@ public interface IUploadFileService
 {
     IAsyncEnumerable<UploadFileViewModel> ListAsync();
 
-    ValueTask<UploadFileViewModel> GetDetailsAsync(int id);
+    ValueTask<UploadFileViewModel?> GetDetailsAsync(int id);
 
-    ValueTask<UploadFile> GetDownloadDataAsync(int id);
+    ValueTask<UploadFile?> GetDownloadDataAsync(int id);
 
-    ValueTask CreateAsync(UploadFileViewModel uploadFile);
+    ValueTask<UploadFile> CreateAsync(UploadFileViewModel uploadFile);
 
-    ValueTask EditAsync(int id, UploadFileViewModel uploadFile);
+    ValueTask<UploadFile?> EditAsync(int id, UploadFileViewModel uploadFile);
 
     ValueTask DeleteAsync(int id, uint version);
 }

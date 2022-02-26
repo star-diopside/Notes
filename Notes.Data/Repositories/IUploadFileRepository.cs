@@ -7,9 +7,9 @@ public interface IUploadFileRepository
 {
     IAsyncEnumerable<TResult> FindAllAsync<TResult>(Expression<Func<UploadFile, TResult>> selector);
 
-    ValueTask<UploadFile> FindByIdAsync(int id);
+    ValueTask<UploadFile?> FindByIdAsync(int id);
 
-    ValueTask<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector);
+    ValueTask<TResult?> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector);
 
     ValueTask<int> AddAsync(UploadFile uploadFile);
 

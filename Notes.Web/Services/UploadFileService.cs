@@ -18,25 +18,35 @@ public class UploadFileService : IUploadFileService
         return _uploadFileRepository.FindAllAsync(u => new UploadFileViewModel(u));
     }
 
-    public ValueTask<UploadFileViewModel> GetDetailsAsync(int id)
+    public ValueTask<UploadFileViewModel?> GetDetailsAsync(int id)
     {
         return _uploadFileRepository.FindByIdAsync(id, u => new UploadFileViewModel(u));
     }
 
-    public ValueTask<UploadFile> GetDownloadDataAsync(int id)
+    public ValueTask<UploadFile?> GetDownloadDataAsync(int id)
     {
         return _uploadFileRepository.FindByIdAsync(id);
     }
 
-    public async ValueTask CreateAsync(UploadFileViewModel uploadFile)
+    public async ValueTask<UploadFile> CreateAsync(UploadFileViewModel uploadFile)
     {
-        await _uploadFileRepository.AddAsync(await uploadFile.ToUploadFileAsync());
+        var model = await uploadFile.ToUploadFileAsync();
+        await _uploadFileRepository.AddAsync(model);
+        return model;
     }
 
-    public async ValueTask EditAsync(int id, UploadFileViewModel uploadFile)
+    public async ValueTask<UploadFile?> EditAsync(int id, UploadFileViewModel uploadFile)
     {
         var model = await _uploadFileRepository.FindByIdAsync(id);
-        await _uploadFileRepository.UpdateAsync(await uploadFile.UpdateUploadFileAsync(model));
+
+        if (model is null)
+        {
+            return null;
+        }
+
+        model = await uploadFile.UpdateUploadFileAsync(model);
+        await _uploadFileRepository.UpdateAsync(model);
+        return model;
     }
 
     public async ValueTask DeleteAsync(int id, uint version)

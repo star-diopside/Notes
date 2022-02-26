@@ -20,12 +20,12 @@ public class UploadFileRepository : IUploadFileRepository
                                           .AsAsyncEnumerable();
     }
 
-    public ValueTask<UploadFile> FindByIdAsync(int id)
+    public ValueTask<UploadFile?> FindByIdAsync(int id)
     {
         return _notesDbContext.UploadFiles.FindAsync(id);
     }
 
-    public async ValueTask<TResult> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector)
+    public async ValueTask<TResult?> FindByIdAsync<TResult>(int id, Expression<Func<UploadFile, TResult>> selector)
     {
         return await _notesDbContext.UploadFiles.Where(u => u.Id == id)
                                                 .Select(selector)

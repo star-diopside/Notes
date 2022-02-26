@@ -68,7 +68,13 @@ public class UploadFilesController : Controller
         {
             try
             {
-                await _uploadFileService.EditAsync(id, uploadFile);
+                var model = await _uploadFileService.EditAsync(id, uploadFile);
+
+                if (model is null)
+                {
+                    return NotFound();
+                }
+
                 TempData["Success"] = _localizer["File was successfully updated."].Value;
                 return RedirectToAction("Index");
             }
